@@ -5,37 +5,74 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Ripple Effect</title>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700&display=swap" rel="stylesheet">
+  <!-- arcade-style font -->
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css" />
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 </head>
 <body>
-  <!-- START SCREEN -->
-  <section id="start-screen" class="screen active fade-in">
-    <h1 class="title">RIPPLE EFFECT</h1>
-    <p class="tagline">Create ripples of change — one drop at a time.</p>
-    <button id="start-btn" class="btn primary">START GAME</button>
-    <button id="about-btn" class="btn secondary">ABOUT</button>
-  </section>
+  <!-- Background decor -->
+  <div id="bg-decor" aria-hidden="true"></div>
 
-  <!-- GAME SCREEN -->
-  <section id="game-screen" class="screen fade-in">
-    <header class="game-header">
-      <div class="score">Communities Reached: <span id="score">0</span></div>
-      <div class="timer">Time: <span id="time">30</span>s</div>
-    </header>
+  <!-- Fullscreen container -->
+  <main id="game-container">
+    <!-- START SCREEN -->
+    <section id="start-screen" class="screen active fade-in">
+      <h1 class="title">RIPPLE EFFECT</h1>
+      <p class="tagline">Create ripples of change — one drop at a time.</p>
+      <div class="difficulty-row" aria-hidden="false">
+        <label for="difficulty-select" class="difficulty-label">Difficulty:</label>
+        <select id="difficulty-select" class="difficulty-select" aria-label="Select difficulty">
+          <option value="easy">Easy</option>
+          <option value="normal" selected>Normal</option>
+          <option value="hard">Hard</option>
+        </select>
+      </div>
+      <button id="start-btn" class="btn primary">START GAME</button>
+      <a id="about-btn" class="btn secondary" href="https://www.charitywater.org/" target="_blank" rel="noopener">ABOUT</a>
+    </section>
 
-    <div id="game-area"></div>
-    <p id="message" class="feedback"></p>
-    <button id="reset-btn" class="btn primary small">Reset</button>
-  </section>
+    <!-- GAME SCREEN -->
+    <section id="game-screen" class="screen fade-in">
+      <header class="game-header">
+        <div class="score">Communities Reached: <span id="score">0</span></div>
+        <div class="timer">Time: <span id="time">30</span>s</div>
+      </header>
 
-  <!-- END SCREEN -->
-  <section id="end-screen" class="screen fade-in">
-    <h2 id="end-title">Quest Complete!</h2>
-    <p id="end-text">You helped bring clean water to <span id="final-score">0</span> communities!</p>
-    <button id="play-again-btn" class="btn primary">Play Again</button>
-    <a href="https://www.charitywater.org" class="learn-link" target="_blank">Learn More About charity: water</a>
-  </section>
+      <div id="game-area">
+        <!-- cloud layer sits at the top of the game-area, behind drops -->
+        <div class="cloud-layer" aria-hidden="true">
+          <span class="cloud c1"></span>
+          <span class="cloud c2"></span>
+          <span class="cloud c3"></span>
+        </div>
+        <!-- ...existing dynamic drop elements will be added here at runtime ... -->
+      </div>
+      <p id="message" class="feedback"></p>
+      <button id="reset-btn" class="btn primary small">Reset</button>
+    </section>
+
+    <!-- END SCREEN -->
+    <section id="end-screen" class="screen fade-in">
+      <h2 id="end-title">Quest Complete!</h2>
+      <p id="end-text">You helped bring clean water to <span id="final-score">0</span> communities!</p>
+      <button id="play-again-btn" class="btn primary">Play Again</button>
+      <a href="https://www.charitywater.org" class="learn-link" target="_blank">Learn More About charity: water</a>
+    </section>
+  </main>
+
+  <!-- Footer: charity links + donate CTA -->
+  <footer class="site-footer" role="contentinfo">
+    <div class="footer-inner">
+      <div class="footer-links">
+        <a href="https://www.charitywater.org" target="_blank" rel="noopener">charity: water — Learn</a>
+        <a href="https://www.charitywater.org/donate" target="_blank" rel="noopener">Donate</a>
+      </div>
+      <div class="footer-note">
+        <span>Powered by ripples • Help bring clean water to communities</span>
+      </div>
+    </div>
+  </footer>
 
   <script src="script.js"></script>
 </body>
