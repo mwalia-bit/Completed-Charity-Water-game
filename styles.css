@@ -1,132 +1,603 @@
+/* Reset */
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
-body {
-  font-family: "Montserrat", sans-serif;
-  background: #f7f5ef;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
+/* Root */
+html, body {
+  height: 100%;
+  width: 100%;
+  /* arcade-style primary font with Montserrat fallback */
+  font-family: 'Press Start 2P', 'Montserrat', sans-serif;
+  color: #fff;
+  overflow: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
+/* Background gradient */
+body {
+  background: radial-gradient(1200px 600px at 10% 10%, rgba(0,102,255,0.18), transparent 10%),
+              radial-gradient(800px 400px at 90% 90%, rgba(0,212,255,0.12), transparent 8%),
+              linear-gradient(180deg,#021428 0%, #05273f 60%, #071a2a 100%);
+}
+
+/* Bubbles */
+#bg-decor {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+.bg-bubble {
+  position: absolute;
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.14), rgba(255,255,255,0.03));
+  opacity: 0.12;
+  filter: blur(6px);
+  animation: floatUp linear infinite;
+}
+@keyframes floatUp {
+  0% { transform: translateY(100vh) scale(.9); opacity:0; }
+  10% { opacity: .1; }
+  50% { opacity: .12; }
+  100% { transform: translateY(-20vh) scale(1.05); opacity:0; }
+}
+
+/* Full-screen container */
+#game-container {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+}
+
+/* Screen wrapper */
 .screen {
   display: none;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  width: 350px;
-  height: 620px;
-  border-radius: 25px;
-  background-color: #007bca;
-  color: #fff;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+  width: 90vw;
+  height: 90vh;
+  max-width: 1100px;
+  max-height: 95vh;
+  padding: 2rem;
   text-align: center;
-  border: 6px solid #003366;
-  padding: 1rem;
+  background: rgba(255,255,255,0.03);
+  border-radius: 24px;
+  box-shadow: 0 10px 30px rgba(3,10,20,0.6), inset 0 1px 0 rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.05);
 }
 .screen.active { display: flex; }
 
+/* Animations */
 .fade-in { animation: fadeIn 0.8s ease-in; }
 @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
+/* Typography */
 .title {
-  font-size: 2.2rem;
+  font-size: clamp(1.2rem, 4vw, 2.2rem);
   font-weight: 800;
   color: #ffd200;
+  text-transform: uppercase;
+  letter-spacing: 1px;
   margin-bottom: 0.5rem;
+  text-shadow: 0 4px 16px rgba(0,0,0,0.6);
 }
-.tagline { color: #e8f8ff; margin-bottom: 1.5rem; }
+.tagline {
+  color: #e8f8ff;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+}
 
+/* Buttons */
 .btn {
   border: none;
   border-radius: 12px;
-  padding: 0.9rem 2rem;
+  padding: 1rem 2rem;
   font-size: 1.1rem;
   margin: 0.6rem 0;
   cursor: pointer;
   font-weight: 700;
-  transition: transform 0.15s ease;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.35);
 }
 .btn.primary { background:#ffd200; color:#003049; }
 .btn.secondary { background:#005a92; color:#fff; }
-.btn.small { padding: 0.7rem 1.6rem; font-size: 1rem; }
+.btn.small { padding: 0.7rem 1.5rem; font-size: 1rem; }
 .btn:hover { transform: scale(1.05); }
 
+/* Link */
 .learn-link {
-  color:#ffd200; font-weight:600; text-decoration:none; margin-top:1rem;
+  color:#ffd200;
+  font-weight:600;
+  text-decoration:none;
+  margin-top:1rem;
 }
+.learn-link:hover { text-decoration: underline; }
 
+/* Game Screen */
 #game-screen {
   background: linear-gradient(#009de0 40%, #006eb6 100%);
-  padding: 1rem;
-}
-.game-header {
-  display:flex; justify-content:space-between; width:100%;
-  font-weight:600; margin-bottom:0.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 100%;
+  height: 100%;
+  border-radius: 24px;
 }
 
+.game-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  width: 100%;
+}
+.score, .timer {
+  font-weight: 700;
+  background: rgba(255,255,255,0.1);
+  padding: 0.6rem 1rem;
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,0.2);
+}
+
+/* Game area */
 #game-area {
   position: relative;
+  flex: 1;
   width: 100%;
-  height: 320px;
-  border-radius: 12px;
+  height: 100%;
+  border-radius: 14px;
   overflow: hidden;
-  margin-bottom: 1rem;
-  box-shadow: inset 0 0 20px rgba(0,0,0,0.25);
-  background: radial-gradient(circle at 50% 40%, #3bb8ff 0%, #005b99 100%);
+  /* updated background: brighter center for droplet contrast, richer edges to match theme */
+  background:
+    radial-gradient(600px 320px at 50% 36%, rgba(239, 239, 113, 0.16), transparent 22%),
+    radial-gradient(300px 220px at 50% 60%, rgba(255,255,255,0.03), transparent 30%),
+    linear-gradient(180deg, #3bb8ff 0%, #1f8fc1 40%, #0b5f86 100%);
+  /* stronger inset vignette so droplets look embossed and readable */
+  box-shadow: inset 0 18px 40px rgba(0,0,0,0.42), inset 0 -12px 30px rgba(3,20,30,0.25);
+  margin: 1rem 0;
 }
 
+/* Cloud layer: lightweight decorative clouds at the top of the game area */
+.cloud-layer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 120px; /* clouds only occupy top area */
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 0; /* behind drops */
+  mix-blend-mode: screen;
+}
+
+/* individual cloud shapes */
+.cloud {
+  position: absolute;
+  top: 8px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 30%,
+              rgba(255,255,255,0.96) 0%,
+              rgba(255,255,255,0.85) 35%,
+              rgba(255,255,255,0.55) 60%,
+              rgba(255,255,255,0.18) 100%);
+  filter: blur(6px);
+  opacity: 0.16;
+  transform: translateX(0);
+  will-change: transform, opacity;
+  /* drift + gentle bobbing */
+  animation: cloudDrift linear infinite, cloudBob ease-in-out infinite alternate;
+}
+
+/* sizes & speeds for variety */
+.cloud.c1 { width: 280px; height: 84px; left: -25%; top: 6px; animation-duration: 48s, 6s; opacity: 0.18; }
+.cloud.c2 { width: 180px; height: 56px; left: 5%;  top: 12px; animation-duration: 34s, 5.5s; opacity: 0.14; }
+.cloud.c3 { width: 360px; height: 102px; left: 40%; top: 4px; animation-duration: 62s, 7s; opacity: 0.12; }
+
+/* horizontal drift: move from left to right across area */
+@keyframes cloudDrift {
+  0%   { transform: translateX(-40vw); }
+  100% { transform: translateX(120vw); }
+}
+/* small vertical bob */
+@keyframes cloudBob {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(-6px); }
+}
+
+/* Drops */
 .drop {
   position: absolute;
-  width: 35px;
-  height: 50px;
+  width: 30px;
+  height: 55px;
   border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
   transform: rotate(180deg);
   animation: fall 3s linear forwards;
+  z-index: 2;
 }
 .clean {
   background: radial-gradient(circle at 35% 25%, #b3e5ff 5%, #0091ea 50%, #005b99 100%);
   box-shadow: 0 0 10px rgba(0, 180, 255, 0.5);
 }
-.clean::after {
-  content: "";
-  position: absolute;
-  top: 10%;
-  left: 25%;
-  width: 30%;
-  height: 25%;
-  background: rgba(255, 255, 255, 0.9);
-  border-radius: 50%;
-}
-
 .polluted {
-  background: radial-gradient(circle at 35% 25%, #c2a05f 5%, #5e430c 70%, #3b2b00 100%);
-  box-shadow: 0 0 10px rgba(60, 30, 0, 0.5);
+  /* updated to a richer, more aesthetic teal/purple blend with a soft glow */
+  background: radial-gradient(circle at 30% 25%, #a98bd8 5%, #a49372 45%, #153a4a 100%);
+  box-shadow: 0 6px 18px rgba(24,80,90,0.25), 0 0 14px rgba(95,181,176,0.14);
 }
-.polluted::after {
-  content: "";
-  position: absolute;
-  top: 10%;
-  left: 25%;
-  width: 30%;
-  height: 25%;
-  background: rgba(255, 255, 255, 0.3);
-  border-radius: 50%;
-}
-
 @keyframes fall {
   0% { top: -60px; opacity: 0; }
   10% { opacity: 1; }
-  100% { top: 330px; opacity: 0.8; }
+  100% { top: 110%; opacity: 0.8; }
 }
 
+/* Ripple effect */
 @keyframes rippleEffect {
   0% { transform: scale(1); opacity: 0.8; }
   100% { transform: scale(3); opacity: 0; }
 }
 
+/* Feedback */
 .feedback {
   color: #002e4d;
   font-weight: 600;
   margin-bottom: 0.5rem;
+}
+
+/* Difficulty selector (start screen) */
+.difficulty-row {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 12px;
+}
+.difficulty-label { color: rgba(255,255,255,0.9); font-weight: 700; }
+.difficulty-select {
+  background: rgba(255,255,255,0.06);
+  color: #fff;
+  border: 1px solid rgba(255,255,255,0.06);
+  padding: 8px 12px;
+  border-radius: 10px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 6px 16px rgba(0,0,0,0.45);
+}
+
+/* Floating point popup when clicking drops */
+.point-popup {
+  position: absolute;
+  pointer-events: none;
+  font-weight: 800;
+  color: #fff;
+  text-shadow: 0 6px 18px rgba(0,0,0,0.6);
+  transform: translate(-50%, -50%) translateY(0);
+  opacity: 1;
+  animation: popupFloat 900ms ease-out forwards;
+  z-index: 5;
+}
+@keyframes popupFloat {
+  0% { transform: translate(-50%, -50%) translateY(0) scale(1); opacity: 1; }
+  100% { transform: translate(-50%, -50%) translateY(-40px) scale(.98); opacity: 0; }
+}
+
+/* Footer */
+.site-footer {
+  width: 100%;
+  padding: 16px 20px;
+  box-sizing: border-box;
+  color: rgba(255,255,255,0.9);
+  z-index: 2;
+  position: relative;
+}
+.footer-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+.footer-links a {
+  color: #ffd200;
+  font-weight: 700;
+  margin-right: 12px;
+  text-decoration: none;
+}
+.footer-links a:hover { text-decoration: underline; }
+.footer-note { color: rgba(255,255,255,0.7); font-size: 0.95rem; }
+
+/* Ensure drops sit over cloud layer but under point popups/header */
+.drop { z-index: 2; }
+.game-header { position: relative; z-index: 4; }
+
+/* Full-screen container */
+#game-container {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+}
+
+/* Screen wrapper */
+.screen {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 90vw;
+  height: 90vh;
+  max-width: 1100px;
+  max-height: 95vh;
+  padding: 2rem;
+  text-align: center;
+  background: rgba(255,255,255,0.03);
+  border-radius: 24px;
+  box-shadow: 0 10px 30px rgba(3,10,20,0.6), inset 0 1px 0 rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.05);
+}
+.screen.active { display: flex; }
+
+/* Animations */
+.fade-in { animation: fadeIn 0.8s ease-in; }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+/* Typography */
+.title {
+  font-size: clamp(1.2rem, 4vw, 2.2rem);
+  font-weight: 800;
+  color: #ffd200;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 0.5rem;
+  text-shadow: 0 4px 16px rgba(0,0,0,0.6);
+}
+.tagline {
+  color: #e8f8ff;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+}
+
+/* Buttons */
+.btn {
+  border: none;
+  border-radius: 12px;
+  padding: 1rem 2rem;
+  font-size: 1.1rem;
+  margin: 0.6rem 0;
+  cursor: pointer;
+  font-weight: 700;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.35);
+}
+.btn.primary { background:#ffd200; color:#003049; }
+.btn.secondary { background:#005a92; color:#fff; }
+.btn.small { padding: 0.7rem 1.5rem; font-size: 1rem; }
+.btn:hover { transform: scale(1.05); }
+
+/* Link */
+.learn-link {
+  color:#ffd200;
+  font-weight:600;
+  text-decoration:none;
+  margin-top:1rem;
+}
+.learn-link:hover { text-decoration: underline; }
+
+/* Game Screen */
+#game-screen {
+  background: linear-gradient(#009de0 40%, #006eb6 100%);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 100%;
+  height: 100%;
+  border-radius: 24px;
+}
+
+.game-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  width: 100%;
+}
+.score, .timer {
+  font-weight: 700;
+  background: rgba(255,255,255,0.1);
+  padding: 0.6rem 1rem;
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,0.2);
+}
+
+/* Game area */
+#game-area {
+  position: relative;
+  flex: 1;
+  width: 100%;
+  height: 100%;
+  border-radius: 14px;
+  overflow: hidden;
+  /* updated background: brighter center for droplet contrast, richer edges to match theme */
+  background:
+    radial-gradient(600px 320px at 50% 36%, rgba(239, 239, 113, 0.16), transparent 22%),
+    radial-gradient(300px 220px at 50% 60%, rgba(255,255,255,0.03), transparent 30%),
+    linear-gradient(180deg, #3bb8ff 0%, #1f8fc1 40%, #0b5f86 100%);
+  /* stronger inset vignette so droplets look embossed and readable */
+  box-shadow: inset 0 18px 40px rgba(0,0,0,0.42), inset 0 -12px 30px rgba(3,20,30,0.25);
+  margin: 1rem 0;
+}
+
+/* Cloud layer: lightweight decorative clouds at the top of the game area */
+.cloud-layer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 120px; /* clouds only occupy top area */
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 0; /* behind drops */
+  mix-blend-mode: screen;
+}
+
+/* individual cloud shapes */
+.cloud {
+  position: absolute;
+  top: 8px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 30%,
+              rgba(255,255,255,0.96) 0%,
+              rgba(255,255,255,0.85) 35%,
+              rgba(255,255,255,0.55) 60%,
+              rgba(255,255,255,0.18) 100%);
+  filter: blur(6px);
+  opacity: 0.16;
+  transform: translateX(0);
+  will-change: transform, opacity;
+  /* drift + gentle bobbing */
+  animation: cloudDrift linear infinite, cloudBob ease-in-out infinite alternate;
+}
+
+/* sizes & speeds for variety */
+.cloud.c1 { width: 280px; height: 84px; left: -25%; top: 6px; animation-duration: 48s, 6s; opacity: 0.18; }
+.cloud.c2 { width: 180px; height: 56px; left: 5%;  top: 12px; animation-duration: 34s, 5.5s; opacity: 0.14; }
+.cloud.c3 { width: 360px; height: 102px; left: 40%; top: 4px; animation-duration: 62s, 7s; opacity: 0.12; }
+
+/* horizontal drift: move from left to right across area */
+@keyframes cloudDrift {
+  0%   { transform: translateX(-40vw); }
+  100% { transform: translateX(120vw); }
+}
+/* small vertical bob */
+@keyframes cloudBob {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(-6px); }
+}
+
+/* Drops */
+.drop {
+  position: absolute;
+  width: 30px;
+  height: 55px;
+  border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+  transform: rotate(180deg);
+  animation: fall 3s linear forwards;
+  z-index: 2;
+}
+.clean {
+  background: radial-gradient(circle at 35% 25%, #b3e5ff 5%, #0091ea 50%, #005b99 100%);
+  box-shadow: 0 0 10px rgba(0, 180, 255, 0.5);
+}
+.polluted {
+  /* updated to a richer, more aesthetic teal/purple blend with a soft glow */
+  background: radial-gradient(circle at 30% 25%, #a98bd8 5%, #a49372 45%, #153a4a 100%);
+  box-shadow: 0 6px 18px rgba(24,80,90,0.25), 0 0 14px rgba(95,181,176,0.14);
+}
+@keyframes fall {
+  0% { top: -60px; opacity: 0; }
+  10% { opacity: 1; }
+  100% { top: 110%; opacity: 0.8; }
+}
+
+/* Ripple effect */
+@keyframes rippleEffect {
+  0% { transform: scale(1); opacity: 0.8; }
+  100% { transform: scale(3); opacity: 0; }
+}
+
+/* Feedback */
+.feedback {
+  color: #002e4d;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+/* Difficulty selector (start screen) */
+.difficulty-row {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 12px;
+}
+.difficulty-label { color: rgba(255,255,255,0.9); font-weight: 700; }
+.difficulty-select {
+  background: rgba(255,255,255,0.06);
+  color: #fff;
+  border: 1px solid rgba(255,255,255,0.06);
+  padding: 8px 12px;
+  border-radius: 10px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 6px 16px rgba(0,0,0,0.45);
+}
+
+/* Floating point popup when clicking drops */
+.point-popup {
+  position: absolute;
+  pointer-events: none;
+  font-weight: 800;
+  color: #fff;
+  text-shadow: 0 6px 18px rgba(0,0,0,0.6);
+  transform: translate(-50%, -50%) translateY(0);
+  opacity: 1;
+  animation: popupFloat 900ms ease-out forwards;
+  z-index: 5;
+}
+@keyframes popupFloat {
+  0% { transform: translate(-50%, -50%) translateY(0) scale(1); opacity: 1; }
+  100% { transform: translate(-50%, -50%) translateY(-40px) scale(.98); opacity: 0; }
+}
+
+/* Footer */
+.site-footer {
+  width: 100%;
+  padding: 16px 20px;
+  box-sizing: border-box;
+  color: rgba(255,255,255,0.9);
+  z-index: 2;
+  position: relative;
+}
+.footer-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+.footer-links a {
+  color: #ffd200;
+  font-weight: 700;
+  margin-right: 12px;
+  text-decoration: none;
+}
+.footer-links a:hover { text-decoration: underline; }
+.footer-note { color: rgba(255,255,255,0.7); font-size: 0.95rem; }
+
+/* Ensure drops sit over cloud layer but under point popups/header */
+.drop { z-index: 2; }
+.game-header { position: relative; z-index: 4; }
+
+/* Responsive */
+@media (max-width: 768px) {
+  .screen {
+    width: 95vw;
+    height: 95vh;
+    padding: 1rem;
+  }
+  #game-area {
+    height: 60vh;
+  }
+  .title { font-size: clamp(1.8rem, 8vw, 3rem); }
 }
